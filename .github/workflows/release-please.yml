@@ -1,0 +1,71 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - closed
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-pr:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == false)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        with:
+          release-type: node
+          package-name: task-manager-ai-first
+          default-branch: main
+          pull-request-header: "🤖 Automated Release PR"
+          pull-request-title-pattern: "chore: release ${version}"
+          include-v-in-tag: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    if: |
+      github.event_name == 'pull_request' && 
+      github.event.pull_request.merged == true && 
+      contains(github.event.pull_request.title, 'chore: release')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        with:
+          release-type: node
+          package-name: task-manager-ai-first
+          default-branch: main
+          include-v-in-tag: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate AI Release Notes
+        if: success()
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -n "$OPENAI_API_KEY" ]; then
+            COMMITS=$(git log --format="%s" $(git describe --tags --abbrev=0 HEAD^)..HEAD 2>/dev/null || echo "Initial release")
+            echo "Generating AI release notes..."
+            RESPONSE=$(curl -s https://api.openai.com/v1/chat/completions \
+              -H "Authorization: Bearer $OPENAI_API_KEY" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "model": "gpt-4o-mini",
+                "messages": [
+                  {"role": "system", "content": "You are a technical writer. Create friendly, concise release notes from these commit messages. Group by type (Features, Bug Fixes, Improvements, etc). Use bullet points."},
+                  {"role": "user", "content": "Commit messages: '"$COMMITS"'"}
+                ],
+                "temperature": 0.7
+              }')
+            NOTES=$(echo "$RESPONSE" | jq -r '.choices[0].message.content // empty')
+            if [ -n "$NOTES" ]; then
+              echo "## AI Release Notes" >> $GITHUB_STEP_SUMMARY
+              echo "$NOTES" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "No OpenAI API key configured - using standard release notes"
+          fi
