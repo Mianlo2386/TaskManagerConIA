@@ -1,6 +1,7 @@
 {
   "name": "task-manager-ai-first",
   "version": "1.0.0",
+  "type": "module",
   "description": "Task Manager API - Express + TypeScript (AI-First, Clean Architecture)",
   "main": "dist/index.js",
   "scripts": {
@@ -8,7 +9,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "db:test": "ts-node --esm src/scripts/test-db.ts"
   },
   "license": "MIT",
   "dependencies": {
@@ -21,6 +23,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
     "mongodb-memory-server": "^11.0.1",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3",
     "vitest": "1.6.0"

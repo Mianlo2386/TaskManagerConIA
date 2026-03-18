@@ -12,19 +12,16 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   release-pr:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == false)
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         with:
-          release-type: node
-          package-name: task-manager-ai-first
-          default-branch: main
-          pull-request-header: "🤖 Automated Release PR"
-          pull-request-title-pattern: "chore: release ${version}"
-          include-v-in-tag: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
   release:
@@ -34,12 +31,8 @@ jobs:
       contains(github.event.pull_request.title, 'chore: release')
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         with:
-          release-type: node
-          package-name: task-manager-ai-first
-          default-branch: main
-          include-v-in-tag: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate AI Release Notes
@@ -57,7 +50,7 @@ jobs:
                 "model": "gpt-4o-mini",
                 "messages": [
                   {"role": "system", "content": "You are a technical writer. Create friendly, concise release notes from these commit messages. Group by type (Features, Bug Fixes, Improvements, etc). Use bullet points."},
-                  {"role": "user", "content": "Commit messages: '"$COMMITS"'"}
+                  {"role": "user", "content": "Commit messages: $COMMITS"}
                 ],
                 "temperature": 0.7
               }')
