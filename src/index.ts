@@ -9,7 +9,10 @@ const app = express();
 
 // [NUEVO] Configuración de CORS: Permite que tu frontend local hable con la nube
 app.use(cors({
-  origin: "http://localhost:5173", // Origen de tu Vite local
+  origin: [
+    "http://localhost:5173", 
+    "https://task-manager-con-ia-9ua6.vercel.app" // [NUEVO] Tu URL de producción
+  ],
   methods: ["GET", "POST", "PATCH", "DELETE"],
   credentials: true
 }));
