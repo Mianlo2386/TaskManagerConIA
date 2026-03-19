@@ -6,6 +6,7 @@ const taskSchema = new Schema<ITask>(
     title: {
       type: String,
       required: [true, "Title is required"],
+      maxlength: [255, "Title cannot exceed 255 characters"],
       validate: {
         validator: function (value: string): boolean {
           return typeof value === "string" && value.trim().length > 0;
