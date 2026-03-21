@@ -7,12 +7,12 @@ A diferencia del desarrollo tradicional, este proyecto se ha liderado mediante e
 . Como Director del Proceso, definí los requerimientos y la arquitectura en especificaciones de alto nivel, permitiendo que agentes de IA (Cursor y la "Legión") generaran el código como un artefacto derivado, siempre bajo mi supervisión crítica en el ciclo Human in the Loop (HITL)
 .
 🛠️ Stack Tecnológico Orquestado
-Backend: Node.js + Express (Módulos ESMnativo) desplegado en Vercel como Serverless Functions [Conversación anterior].
-Frontend: React 19 + Vite + Tailwind CSS, operando de forma desacoplada para garantizar escalabilidad independiente [Conversación anterior].
-Base de Datos: MongoDB Atlas (Cloud) con persistencia real y esquemas validados [332, Conversación anterior].
-🛡️ Pilares de Arquitectura y Seguridad
-Principio Fail-fast: Implementamos un componente de SystemStatus que realiza pings preventivos al endpoint /health del backend; si la infraestructura no está validada, el sistema bloquea operaciones de escritura para proteger la integridad de los datos [386, Conversación anterior].
-Seguridad por Diseño: El acceso está blindado mediante middleware de Helmet y una política estricta de CORS que solo confía en orígenes de producción validados, eliminando vulnerabilidades estándar [412, Conversación anterior].
+Backend: Node.js + Express (Módulos ESMnativo) desplegado en Vercel como Serverless Functions.
+Frontend: React 19 + Vite + Tailwind CSS, operando de forma desacoplada para garantizar escalabilidad independiente 
+Base de Datos: MongoDB Atlas (Cloud) con persistencia real y esquemas validados.
+🛡️ Pilares de Arquitectura y Seguridad.
+Principio Fail-fast: Implementamos un componente de SystemStatus que realiza pings preventivos al endpoint /health del backend; si la infraestructura no está validada, el sistema bloquea operaciones de escritura para proteger la integridad de los datos .
+Seguridad por Diseño: El acceso está blindado mediante middleware de Helmet y una política estricta de CORS que solo confía en orígenes de producción validados, eliminando vulnerabilidades estándar.
 Responsabilidad Profesional: Cada línea de código generada ha sido auditada para asegurar que no solo "funcione", sino que sea sostenible y escalable en un entorno real de producción
 .
 🚀 Despliegue en Producción
